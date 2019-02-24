@@ -1,0 +1,15 @@
+{% extends "listings.html" %}
+
+{% block content %}
+    <div>
+        <div>
+            <h1>{{ user.username }}</h1>
+        </div>
+        <div>
+            <h5>Posts</h5>
+            <p>{{ user.posts.count()}}<!-- .count() gives us how many posts we have --></p>
+        </div>
+    </div>
+<!-- looks for whatever we're extending from, so it will have all of that user's posts -->
+{{ super() }} <!-- grabs everything from listings.html for us -->
+{% endblock %}
