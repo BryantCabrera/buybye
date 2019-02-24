@@ -1,7 +1,7 @@
 #lets you make forms from classes: used in Django, rails, etc.
 from flask_wtf import FlaskForm as Form
 from models import User
-from wtforms import StringField, PasswordField, TextAreaField
+from wtforms import StringField, PasswordField, TextAreaField, DecimalField
 #() lets you do multiple line import
 from wtforms.validators import (DataRequired, Regexp, ValidationError, Email, Length, EqualTo)
 
@@ -55,5 +55,7 @@ class LoginForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
 
 class PostForm(Form):
+    name = TextAreaField("Enter Item Name Here", validators=[DataRequired()])
     content = TextAreaField("Enter Item Description Here", validators=[DataRequired()])
+    price = DecimalField("Enter Item Price Here", places=2, rounding=None, use_locale=False, number_format=None, validators=[DataRequired()])
     img = TextAreaField("Enter Image URL Here", validators=[DataRequired()])

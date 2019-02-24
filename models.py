@@ -11,7 +11,7 @@ class User(UserMixin, Model):
     email = CharField(unique=True)
     password = CharField(max_length=70)
     member_since = DateTimeField(default=datetime.datetime.now)
-    id_admin = BooleanField(default=False)
+    is_admin = BooleanField(default=False)
 
     class Meta:
         database = DATABASE 
@@ -46,6 +46,7 @@ class Post(Model):
         model=User,
         backref='posts'
     )
+    name = TextField()
     content = TextField()
     price = DecimalField()
     img = TextField()

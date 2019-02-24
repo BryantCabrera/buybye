@@ -94,8 +94,8 @@ def logout():
 ##INDEX route
 @app.route('/')
 def index():
-    # stream = models.Post.select().limit(100)
     listings = models.Post.select().limit(100)
+    print(listings, ' from index route app.py')
     return render_template('listings.html', listings=listings)
 
 ##CREATE Post route
@@ -104,10 +104,15 @@ def index():
 def post():
     form = forms.PostForm() #don't forget to invoke this
     ##POST
+    print(form, ' this is form')
     if form.validate_on_submit():
         #strip is like trim in JS, gets rid of white space in whatever they submitted
         models.Post.create(user=g.user._get_current_object(),
-                            content=form.content.data.strip()) 
+                            name=form.name.data.strip(),
+                            content=form.content.data.strip(),
+                            price=form.price.data,
+                            img=form.img.data.strip(),)
+
         flash('Message Successfully Posted', 'success')
         return redirect(url_for('index'))
     
@@ -117,7 +122,7 @@ def post():
 #SHOW Posts/Listings route
 @app.route('/listings')
 @app.route('/listings/<username>')
-def stream(username=None):
+def listings(username=None):
     template = 'listings.html'
     ##check
     if username and username != current_user.username:
