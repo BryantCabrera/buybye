@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BuyBye</title>
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- import css from static directory -->
+  <link rel="stylesheet" type="text/css" href="/static/style.css">
+  <!-- optimizes view for mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <header>
+        <div class="welcome">
+            <!-- current_user is from app.py that we imported from flask_login -->
+        <h1>{% if current_user.is_authenticated %} Hello {{current_user.username}} {%endif%}</h1>
+        </div>
+        <nav class="nav--user">
+            {% if current_user.is_authenticated %}
+                <!-- this function will find that route for you and automatically create that route -->
+                <a href="{{url_for('logout')}}" title="logout">Logout</a>
+                {% else %}
+                <a href="{{url_for('login')}}" title="login">Login</a>
+                <a href="{{url_for('register')}}" title="register">Register</a>
+            {% endif %}
+            <a href="{{ url_for('index') }}">Home</a>
+        </nav>
+    </header>
+    <body>
+        <div class="user__message">
+            <!-- get_flashed_messages is available on any template, the with_categories True gives us the tuple -->
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class={{category}}>{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</body>
+</html>

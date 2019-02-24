@@ -2,7 +2,8 @@ from flask import Flask, g, render_template, flash, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import check_password_hash
 
-import models 
+import models
+import forms
 
 app = Flask(__name__)
 
@@ -41,6 +42,55 @@ def after_request(response):
     return response
 
 #Routes
+##REGISTER route - combines POST & GET requests
+@app.route('/register', methods=('GET', 'POST'))
+def register():
+    form = forms.RegisterForm() #this .RegisterForm() must match the classname from forms.py
+    ##this if statement handles the post request
+    if form.validate_on_submit():
+        ##just returns true or false
+        flash('Yay you registered', 'success')
+        models.User.create_user(
+            username=form.username.data, #getting from form's property called "username"
+            email=form.email.data,
+            password=form.password.data
+        )
+        return redirect(url_for('index'))
+    ##the response fo the GET request
+    ##inject the form as variable form into this view
+    return render_template('register.html', form=form) 
+
+##LOGIN route
+@app.route('/login', methods=('GET', 'POST'))
+def login():
+    form = forms.LoginForm()
+    if form.validate_on_submit():
+        try:
+            user = models.User.get(models.User.email == form.email.data)
+        except models.DoesNotExist:
+            flash('Your email or password doesn\'t match.', 'error')
+        else:
+            if check_password_hash(user.password, form.password.data):
+                ##login our user / create our session
+                login_user(user)
+
+                return redirect(url_for('index'))
+
+            else:
+                flash('Your email or password doesn\'t match.', 'error')
+
+    ###GET route
+    return render_template('login.html', form=form)
+
+##LOGOUT route
+@app.route('/logout')
+@login_required
+def logout():
+    ##destroys our session
+    logout_user() #given to us by Flask login manager
+    flash('You\'ve been successfully logged out.', 'success')
+    return redirect(url_for('index'))
+
 ##INDEX route
 @app.route('/')
 def index():
@@ -52,7 +102,7 @@ if __name__ == '__main__':
     ##sets up our tables
     models.initialize()
 
-    ##create admin/default user
+    ##creates admin/default user
     try:
         ##Creates Admin User
         ##happens once when you start up your app

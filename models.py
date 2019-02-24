@@ -52,7 +52,7 @@ class Post(Model):
     class Meta:
         database = DATABASE
         ##takes in a tuple
-        ##need a trailing comma or else it won't create the tuple
+        ##needs a trailing comma or else it won't create the tuple
         ##shows most recent post first
         order_by = ('-timestamp',)
 
