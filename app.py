@@ -98,6 +98,22 @@ def index():
     listings = models.Post.select().limit(100)
     return render_template('listings.html', listings=listings)
 
+##CREATE Post route
+@app.route('/new_post', methods=('GET', 'POST'))
+@login_required
+def post():
+    form = forms.PostForm() #don't forget to invoke this
+    ##POST
+    if form.validate_on_submit():
+        #strip is like trim in JS, gets rid of white space in whatever they submitted
+        models.Post.create(user=g.user._get_current_object(),
+                            content=form.content.data.strip()) 
+        flash('Message Successfully Posted', 'success')
+        return redirect(url_for('index'))
+    
+    #GET route
+    return render_template('posts.html', form=form)
+
 #SHOW Posts/Listings route
 @app.route('/listings')
 @app.route('/listings/<username>')

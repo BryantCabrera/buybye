@@ -17,8 +17,9 @@
         <nav class="nav--user">
             {% if current_user.is_authenticated %}
                 <!-- this function will find that route for you and automatically create that route -->
+                <a href="{{url_for('post')}}" title="post">Post</a>
                 <a href="{{url_for('logout')}}" title="logout">Logout</a>
-                {% else %}
+            {% else %}
                 <a href="{{url_for('login')}}" title="login">Login</a>
                 <a href="{{url_for('register')}}" title="register">Register</a>
             {% endif %}
