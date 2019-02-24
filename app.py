@@ -27,7 +27,18 @@ def load_user(userid):
         return None
 
 #Database Set-Up
+@app.before_request
+def before_request():
+        """Connects to the database before each request"""
+        g.db = models.DATABASE
+        g.db.connect()
+        g.user=current_user
 
+@app.after_request
+def after_request(response):
+    """Closes the databased connection after each request"""
+    g.db.close()
+    return response
 
 #Routes
 ##INDEX route
