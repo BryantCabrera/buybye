@@ -47,6 +47,7 @@ class Post(Model):
         backref='posts'
     )
     content = TextField()
+    price = DecimalField()
     img = TextField()
 
     class Meta:

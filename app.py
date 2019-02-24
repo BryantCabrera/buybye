@@ -10,7 +10,7 @@ app = Flask(__name__)
 ##session secret key for our cookie
 app.secret_key = 'bryantcabrera.buybyepythonflasksql'
 
-#Set Up Login Manager
+#Sets Up Login Manager
 ##loginManager sets up our session for us, manages our session, and loads our user for us
 #instantiates an instance of our loginManager
 login_manager = LoginManager() 
@@ -95,7 +95,27 @@ def logout():
 @app.route('/')
 def index():
     # stream = models.Post.select().limit(100)
-    return render_template('home.html')
+    listings = models.Post.select().limit(100)
+    return render_template('listings.html', listings=listings)
+
+#SHOW Posts/Listings route
+@app.route('/listings')
+@app.route('/listings/<username>')
+def stream(username=None):
+    template = 'listings.html'
+    ##check
+    if username and username != current_user.username:
+        ##if the username is in the url and the user is NOT the person with the session
+        ##the ** (like) means case doesn't matter
+        user = models.User.select().where(models.User.username**username).get()
+        ##.posts is coming from our user model
+        listings = user.posts.limit(100)
+    else:
+        listings = current_user.get_posts().limit(100)
+        user = current_user
+    if username:
+        template = 'user_profile.html'
+    return render_template(template, listings=listings, user=user)
 
 #Database initialization
 if __name__ == '__main__':

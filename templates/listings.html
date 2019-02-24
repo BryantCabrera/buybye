@@ -1,0 +1,18 @@
+{% extends "layout.html" %}    
+    
+{% block content %}
+    <div class="home__welcome">
+        Welcome to BuyBye's Homepage.
+    </div>
+    <!-- loops over posts -->
+    {% for post in stream %}
+        <div class="card" style="width: 18rem">
+            <time data-time="{{post.timestamp}}" datatime="{{ post.timestamp.strftime('%Y-m-%d %H:%M')}}">{{ post.timestamp.strftime('%Y-%m-%d %H:%M')}}</time>
+            <h5 class='card-title'><a class="btn btn-primary" href="{{ url_for('listings', username=post.user.username) }}" title="{{post.user.username}}'s Profile">{{post.user.username}}</a></h5>
+            <div class="Card-body">
+                <img class="card-image" src="{{ post.img }}" alt="Item Image" title="Item Image">
+                <p class="card-text">{{ post.content }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
